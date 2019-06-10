@@ -6,6 +6,14 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import "./App.css";
+import {
+  DATA_ROCK,
+  DATA_PAPER,
+  DATA_SCISSORS,
+  DATA_DRAW,
+  DATA_USER,
+  DATA_COMPUTER
+} from "./Constants";
 
 const styles = theme => ({
   root: {
@@ -24,10 +32,6 @@ const styles = theme => ({
     margin: theme.spacing(1)
   }
 });
-
-export const DATA_ROCK = 0;
-export const DATA_PAPER = 1;
-export const DATA_SCISSORS = 2;
 
 const sets = [
   { name: "Rock", colour: "primary", id: DATA_ROCK },
@@ -59,7 +63,7 @@ export const PlayerSets = ({ cssStyles, sets, event }) => {
   });
 };
 
-export const Results = ({ styles, result }) => {
+export const Results = ({ styles, result, scores }) => {
   let draw = "";
   if (result.user) {
     draw = (
@@ -74,6 +78,9 @@ export const Results = ({ styles, result }) => {
         <Typography variant="h6" component="h3">
           {result.message}
         </Typography>
+        <Typography component="p">
+          You: {scores.user} Computer:{scores.computer}
+        </Typography>
         {draw}
       </Paper>
     </Grid>
@@ -85,23 +92,34 @@ export const decideWinner = (human, computer) => {
   computer = parseInt(computer);
 
   if (human === computer) {
-    return "It's a draw";
+    return { message: "It's a draw", winner: 0 };
   }
   if (
     (human === DATA_ROCK && computer === DATA_SCISSORS) ||
     (human === DATA_PAPER && computer === DATA_ROCK) ||
     (human === DATA_SCISSORS && computer === DATA_PAPER)
   ) {
-    return "You are the winner";
+    return { message: "You are the winner", winner: 1 };
   }
-  return "You lost";
+  return { message: "You lost", winner: 2 };
+};
+
+export const scoresGame = (result, scores) => {
+  if (result === DATA_USER) {
+    return { user: scores.user + 1, computer: scores.computer };
+  }
+  if (result === DATA_COMPUTER) {
+    return { user: scores.user, computer: scores.computer + 1 };
+  }
+  return scores;
 };
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      result: { message: "Result", user: null, computer: null }
+      result: { message: "Result", user: null, computer: null },
+      scores: { user: 0, computer: 0 }
     };
   }
 
@@ -110,13 +128,15 @@ class App extends Component {
     let user = event.currentTarget.dataset.id;
 
     let result = decideWinner(user, computer);
+    let scoresObj = scoresGame(result.winner, this.state.scores);
 
     this.setState({
       result: {
-        message: result,
+        message: result.message,
         user: sets[user].name,
         computer: sets[computer].name
-      }
+      },
+      scores: scoresObj
     });
   };
 
@@ -135,7 +155,11 @@ class App extends Component {
             className="board"
           >
             <PlayerSets cssStyles={classes} sets={sets} event={this.Game} />
-            <Results styles={classes} result={this.state.result} />
+            <Results
+              styles={classes}
+              result={this.state.result}
+              scores={this.state.scores}
+            />
           </Grid>
         </Container>
       </div>
