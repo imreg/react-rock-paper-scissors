@@ -10,7 +10,6 @@ import {
   DATA_ROCK,
   DATA_PAPER,
   DATA_SCISSORS,
-  DATA_DRAW,
   DATA_USER,
   DATA_COMPUTER
 } from "./Constants";
