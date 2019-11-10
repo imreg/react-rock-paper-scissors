@@ -1,4 +1,3 @@
-import React from "react";
 import { expect } from "chai";
 import { scoresGame, decideWinner } from "./App";
 import {
@@ -39,7 +38,7 @@ describe("App component testing", () => {
     let expectation = { user: 0, computer: 0 };
     expect(scoresGame(DATA_DRAW, scores)).to.eql(expectation);
   });
-  it("returns score 0-1 when user win", () => {
+  it("returns score 0-1 when computer win", () => {
     let scores = { user: 0, computer: 0 };
     let expectation = { user: 0, computer: 1 };
     expect(scoresGame(DATA_COMPUTER, scores)).to.eql(expectation);

@@ -1,0 +1,7 @@
+{
+  "testRegex": "(App\\.(snapshot))\\.js?$",
+  "rootDir": "..",
+  "bail": 1,
+  "verbose": true,
+  "transformIgnorePatterns": ["<rootDir>/node_modules/"]
+}
